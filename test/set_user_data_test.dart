@@ -8,18 +8,16 @@ void main() {
       // Arrange
       final firestoreMock = FakeFirebaseFirestore();
       final sut = SetUserData(firestoreMock);
-      final userData = {
-        'username': 'John',
-        'email': 'john@example.com',
-        'phoneNumber': '+123456789',
-      };
+
+      // Create user data
+      final userData = getUserData();
 
       // Act
-      await sut.setUserData(
+      // Set user data to Firestore
+      await setUser(
+        userDataSetter: sut,
         userId: 'user123',
-        username: 'John',
-        email: 'john@example.com',
-        phoneNumber: '+123456789',
+        userData: userData,
         collectionPath: 'users',
       );
 
@@ -32,22 +30,15 @@ void main() {
       // Arrange
       final firestoreMock = FakeFirebaseFirestore();
       final sut = SetUserData(firestoreMock);
-      final userData = {
-        'username': 'John',
-        'email': 'john@example.com',
-        'phoneNumber': '+123456789',
-      };
-      final subCollectionData = {
-        'authMethodType': 'email',
-        'isVerified': false,
-      };
+      final userData = getUserData();
+      final subCollectionData = getSubCollectionData();
 
       // Act
-      await sut.setUserData(
+      // Set user data to Firestore
+      await setUser(
+        userDataSetter: sut,
         userId: 'user123',
-        username: 'John',
-        email: 'john@example.com',
-        phoneNumber: '+123456789',
+        userData: userData,
         collectionPath: 'users',
         subCollectionPath: 'linkedAuthMethods',
         authMethodType: 'email',
@@ -66,4 +57,65 @@ void main() {
           completion(anything));
     });
   });
+}
+
+// Helper function to create userData
+Map<String, dynamic> createUserData({
+  String? username,
+  String? email,
+  String? phoneNumber,
+}) {
+  return {
+    'username': username,
+    'email': email,
+    'phoneNumber': phoneNumber,
+  };
+}
+
+Map<String, dynamic> getUserData() {
+  final userData = createUserData(
+    username: 'John',
+    email: 'john@example.com',
+    phoneNumber: '+123456789',
+  );
+  return userData;
+}
+
+// Helper function to create subCollectionData
+Map<String, dynamic> createSubCollectionData({
+  String? authMethodType,
+  bool? isVerified,
+}) {
+  return {
+    'authMethodType': authMethodType,
+    'isVerified': isVerified,
+  };
+}
+
+Map<String, dynamic> getSubCollectionData() {
+  final subCollectionData =
+      createSubCollectionData(authMethodType: 'email', isVerified: false);
+  return subCollectionData;
+}
+
+// Helper function to set user data to Firestore
+Future<void> setUser({
+  required SetUserData userDataSetter,
+  required String userId,
+  required Map<String, dynamic> userData,
+  required String collectionPath,
+  String? subCollectionPath,
+  String? authMethodType,
+  bool? isVerified,
+}) async {
+  await userDataSetter.setUserData(
+    userId: userId,
+    username: userData['username'],
+    email: userData['email'],
+    phoneNumber: userData['phoneNumber'],
+    collectionPath: collectionPath,
+    subCollectionPath: subCollectionPath,
+    authMethodType: authMethodType,
+    isVerified: false,
+  );
 }

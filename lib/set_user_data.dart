@@ -16,7 +16,7 @@ class SetUserData {
     required String collectionPath,
     String? subCollectionPath,
   }) async {
-    final userData = {
+    final Map<String, dynamic> userData = {
       if (username != null) 'username': username,
       if (email != null) 'email': email,
       if (phoneNumber != null) 'phoneNumber': phoneNumber,
