@@ -1,11 +1,39 @@
+import 'package:authentifire/set_user_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 class SignUp {
   final firebase_auth.FirebaseAuth _firebaseAuth;
+  final SetUserData _setUserData;
 
-  SignUp(
+  SignUp({
     firebase_auth.FirebaseAuth? firebaseAuth,
-  ) : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance;
+    SetUserData? setUserData,
+  })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+        _setUserData = setUserData ?? SetUserData(FirebaseFirestore.instance);
 
-  Future<void> signUp() async {}
+  Future<void> signUp({
+    required String email,
+    required String password,
+    String? username,
+    String? phoneNumber,
+    String? authMethodType,
+  }) async {
+    try {
+      await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+
+      final userId = _firebaseAuth.currentUser?.uid;
+
+      await _setUserData.setUserData(
+        userId: userId!,
+        email: email,
+        username: username,
+        phoneNumber: phoneNumber,
+        authMethodType: 'email',
+      );
+    } catch (e) {
+      throw 'Failed to sign up.';
+    }
+  }
 }

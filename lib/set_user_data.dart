@@ -13,7 +13,6 @@ class SetUserData {
     String? phoneNumber,
     String? authMethodType,
     bool isVerified = false,
-    required String collectionPath,
     String? subCollectionPath,
   }) async {
     final Map<String, dynamic> userData = {
@@ -23,16 +22,13 @@ class SetUserData {
     };
 
     try {
-      await _firebaseFirestore
-          .collection(collectionPath)
-          .doc(userId)
-          .set(userData);
+      await _firebaseFirestore.collection('users').doc(userId).set(userData);
 
       if (subCollectionPath != null) {
         await _firebaseFirestore
-            .collection(collectionPath)
+            .collection('users')
             .doc(userId)
-            .collection(subCollectionPath)
+            .collection('linkedAuthMethod')
             .add({
           'authMethodType': authMethodType,
           'isVerified': isVerified,

@@ -18,7 +18,6 @@ void main() {
         userDataSetter: sut,
         userId: 'user123',
         userData: userData,
-        collectionPath: 'users',
       );
 
       // Assert
@@ -34,13 +33,11 @@ void main() {
       final subCollectionData = getSubCollectionData();
 
       // Act
-      // Set user data to Firestore
+      // Set user data with subcollection to Firestore
       await setUser(
         userDataSetter: sut,
         userId: 'user123',
         userData: userData,
-        collectionPath: 'users',
-        subCollectionPath: 'linkedAuthMethods',
         authMethodType: 'email',
         isVerified: false,
       );
@@ -103,8 +100,6 @@ Future<void> setUser({
   required SetUserData userDataSetter,
   required String userId,
   required Map<String, dynamic> userData,
-  required String collectionPath,
-  String? subCollectionPath,
   String? authMethodType,
   bool? isVerified,
 }) async {
@@ -113,8 +108,6 @@ Future<void> setUser({
     username: userData['username'],
     email: userData['email'],
     phoneNumber: userData['phoneNumber'],
-    collectionPath: collectionPath,
-    subCollectionPath: subCollectionPath,
     authMethodType: authMethodType,
     isVerified: false,
   );
