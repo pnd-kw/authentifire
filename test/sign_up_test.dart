@@ -9,8 +9,8 @@ void main() {
     test('should sign up user', () async {
       // Arrange
       final mockFirebaseAuth = MockFirebaseAuth();
-      final email = 'john@example.com';
-      final password = '12345678';
+      const email = 'john@example.com';
+      const password = '12345678';
       final sut = SignUp(firebaseAuth: mockFirebaseAuth);
 
       // Act
@@ -26,11 +26,11 @@ void main() {
     test('should add user data', () async {
       // Arrange
       final mockSetUserData = FakeFirebaseFirestore();
-      final userId = 'user123';
-      final email = 'john@example.com';
-      final username = 'John';
-      final phoneNumber = '+123456789';
-      final authMethodType = 'email';
+      const userId = 'user123';
+      const email = 'john@example.com';
+      const username = 'John';
+      const phoneNumber = '+123456789';
+      const authMethodType = 'email';
       final sut = SetUserData(mockSetUserData);
 
       // Act

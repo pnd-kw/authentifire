@@ -1,22 +1,20 @@
 import 'package:authentifire/set_user_data.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:fake_cloud_firestore/fake_cloud_firestore.dart'; // Only used for testing needs
+import 'package:authentifire/sign_up_exception.dart';
 
 class SignUp {
-  // final MockFirebaseAuth _firebaseAuth;
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final SetUserData _setUserData;
 
   SignUp({
-    // MockFirebaseAuth? firebaseAuth,
     firebase_auth.FirebaseAuth? firebaseAuth,
     SetUserData? setUserData,
-  })  :
-        // _firebaseAuth = firebaseAuth ?? MockFirebaseAuth();
-        _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-        _setUserData = setUserData ?? SetUserData(FakeFirebaseFirestore());
+  })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+        _setUserData = setUserData ?? SetUserData(FirebaseFirestore.instance);
+        // _setUserData = setUserData ??
+        //     SetUserData(FakeFirebaseFirestore()); // Only used for testing needs
 
   Future<void> signUp({
     required String email,
@@ -38,9 +36,10 @@ class SignUp {
         phoneNumber: phoneNumber,
         authMethodType: 'email',
       );
-    } catch (e) {
-      print('Exception occurred during sign up: $e');
-      throw 'Failed to sign up.';
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
+    } catch (_) {
+      throw const SignUpWithEmailAndPasswordFailure();
     }
   }
 }
