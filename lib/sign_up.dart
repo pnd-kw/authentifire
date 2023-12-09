@@ -1,18 +1,22 @@
 import 'package:authentifire/set_user_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 
 class SignUp {
+  // final MockFirebaseAuth _firebaseAuth;
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final SetUserData _setUserData;
 
   SignUp({
+    // MockFirebaseAuth? firebaseAuth,
     firebase_auth.FirebaseAuth? firebaseAuth,
     SetUserData? setUserData,
-  }) : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance;
-  _setUserData = setUserData ?? SetUserData(FirebaseFirestore.instance);
+  })  :
+        // _firebaseAuth = firebaseAuth ?? MockFirebaseAuth();
+        _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+        _setUserData = setUserData ?? SetUserData(FakeFirebaseFirestore());
 
   Future<void> signUp({
     required String email,
