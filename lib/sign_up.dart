@@ -13,8 +13,8 @@ class SignUp {
     SetUserData? setUserData,
   })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _setUserData = setUserData ?? SetUserData(FirebaseFirestore.instance);
-        // _setUserData = setUserData ??
-        //     SetUserData(FakeFirebaseFirestore()); // Only used for testing needs
+  // _setUserData = setUserData ??
+  //     SetUserData(FakeFirebaseFirestore()); // Only used for testing needs
 
   Future<void> signUp({
     required String email,
@@ -24,11 +24,12 @@ class SignUp {
     String? authMethodType,
   }) async {
     try {
+      // Sign up new user
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
 
       final userId = _firebaseAuth.currentUser?.uid;
-
+      // Set user data to firestore
       await _setUserData.setUserData(
         userId: userId!,
         email: email,

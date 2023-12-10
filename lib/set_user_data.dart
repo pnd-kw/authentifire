@@ -22,8 +22,9 @@ class SetUserData {
     };
 
     try {
+      // Create collection and store user data
       await _firebaseFirestore.collection('users').doc(userId).set(userData);
-
+      // Create subcollection to store authentication method and verification status
       if (subCollectionPath != null) {
         await _firebaseFirestore
             .collection('users')

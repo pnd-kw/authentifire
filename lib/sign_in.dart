@@ -12,16 +12,18 @@ class SignIn {
   })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _getLinkedAuthMethods = getLinkedAuthMethods ?? GetLinkedAuthMethods();
 
+  /// Sign in user and check user verification status via [GetLinkedAuthMethods]
   Future<bool?> signIn({
     required String email,
     required String password,
   }) async {
     try {
+      // Sign in user
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-
+      // Get current user uid
       final userId = _firebaseAuth.currentUser?.uid;
-
+      // Checking user verification status via [GetLinkedAuthMethods] class
       final isVerified = _getLinkedAuthMethods.getLinkedAuthMethods(
           userId: userId!, authMethodType: 'email');
 
