@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:authentifire/get_linked_auth_method.dart';
-import 'package:authentifire/sign_in_exception.dart';
+import 'package:authentifire/helper/get_linked_auth_method.dart';
+import 'package:authentifire/exception/sign_in_exception.dart';
 
+/// Class responsible for sign in the user 
 class SignIn {
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GetLinkedAuthMethods _getLinkedAuthMethods;
@@ -11,8 +12,9 @@ class SignIn {
     GetLinkedAuthMethods? getLinkedAuthMethods,
   })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _getLinkedAuthMethods = getLinkedAuthMethods ?? GetLinkedAuthMethods();
-
   /// Sign in user and check user verification status via [GetLinkedAuthMethods]
+  /// 
+  /// Throws a [SignInFailure] if sign in process fails
   Future<bool?> signIn({
     required String email,
     required String password,

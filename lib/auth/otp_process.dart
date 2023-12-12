@@ -1,23 +1,29 @@
-import 'package:authentifire/get_user_data.dart';
-import 'package:authentifire/sign_in_exception.dart';
-import 'package:authentifire/user_document_not_found_exception.dart';
+import 'package:authentifire/helper/get_user_data.dart';
+import 'package:authentifire/exception/sign_in_exception.dart';
+import 'package:authentifire/exception/sign_in_with_phone_number_exception.dart';
+import 'package:authentifire/helper/update_linked_auth_method.dart';
+import 'package:authentifire/exception/user_document_not_found_exception.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
-class RequestOtp {
+/// Class responsible for phone number verification
+class OtpProcess {
   final firebase_auth.FirebaseAuth _firebaseAuth;
-  GetUserData _getUserData;
+  final GetUserData _getUserData;
+  final UpdateLinkedAuthMethod _updateLinkedAuthMethod;
+  String? _verificationId;
 
-  RequestOtp({
+  OtpProcess({
     firebase_auth.FirebaseAuth? firebaseAuth,
     GetUserData? getUserData,
+    UpdateLinkedAuthMethod? updateLinkedAuthMethod,
   })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
-        _getUserData = getUserData ?? GetUserData(FirebaseFirestore.instance);
-
+        _getUserData = getUserData ?? GetUserData(FirebaseFirestore.instance),
+        _updateLinkedAuthMethod =
+            updateLinkedAuthMethod ?? UpdateLinkedAuthMethod();
   /// Requests OTP verification
   /// Retrieves user data using [GetUserData] and verifies phone number through OTP
   Future<void> requestOtp() async {
-    String? _verificationId;
     try {
       // Retrieving the current user's ID from Firebase Authentication
       final userId = _firebaseAuth.currentUser?.uid;
@@ -45,6 +51,36 @@ class RequestOtp {
       }
     } catch (e) {
       throw const SignInFailure();
+    }
+  }
+  /// Verifies the OTP code provided by the user
+  /// 
+  /// [code] is the OTP code to be verified
+  /// 
+  /// If the OTP verification is successful, the method links the user's phone number with their email as a verified authentication method in Firebase Authentication using [UpdateLinkedAuthMethod]
+  ///
+  /// Returns 'true' if the OTP verification and linking process is successful
+  /// Throws a [SignInWithPhoneNumberFailure] if the verification or linking fails
+  Future<bool> verifyOtp(String code) async {
+    try {
+      final user = _firebaseAuth.currentUser;
+      final userId = _firebaseAuth.currentUser?.uid;
+
+      if (_verificationId != null) {
+        final credential = firebase_auth.PhoneAuthProvider.credential(
+            verificationId: _verificationId!, smsCode: code);
+        if (user != null) {
+          await user.linkWithCredential(credential);
+
+          await _updateLinkedAuthMethod
+              .updateLinkedAuthMethod(userId!, 'email', {'isVerified': true});
+        }
+        return true;
+      } else {
+        throw const SignInWithPhoneNumberFailure();
+      }
+    } catch (e) {
+      throw const SignInWithPhoneNumberFailure();
     }
   }
 }

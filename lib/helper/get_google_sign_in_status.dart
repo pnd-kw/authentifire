@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:authentifire/get_linked_auth_method.dart';
+import 'package:authentifire/helper/get_linked_auth_method.dart';
 
-/// Get GoogleSignIn verification status in authMethodType which has value of 'google' via [GetLinkedAuthMethods]
+/// Class responsible for retrieves the GoogleSignIn verification status from the authMethodType 'google' using [GetLinkedAuthMethods]
 
 class GetGoogleSignInStatus {
   final firebase_auth.FirebaseAuth _firebaseAuth;
@@ -13,7 +13,12 @@ class GetGoogleSignInStatus {
   })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _getLinkedAuthMethods = getLinkedAuthMethods ?? GetLinkedAuthMethods();
 
-  Future<bool?> getGoogleSignInStatus(String userId) async {
+  /// Retrieves the verification status of GoogleSignIn in the 'google' authMethodType
+  ///
+  /// [userId] is the unique identifier of the user
+  ///
+  /// Returns a boolean indicating the verification status, or null if not available
+  Future<bool?> getGoogleSignInStatus(String? userId) async {
     final userId = _firebaseAuth.currentUser?.uid;
 
     final isVerified = await _getLinkedAuthMethods.getLinkedAuthMethods(

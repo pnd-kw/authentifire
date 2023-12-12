@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Class responsible for retrieving linked authentication methods from Firestore
 class GetLinkedAuthMethods {
   final FirebaseFirestore _firebaseFirestore;
 
@@ -7,6 +8,12 @@ class GetLinkedAuthMethods {
     FirebaseFirestore? firebaseFirestore,
   }) : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
+  /// Retrieves the verification status of a specific authentication method for a user
+  /// 
+  /// [userId] is the unique identifier of the user in Firestore
+  /// [authMethodType] specifies the type of authentication method to retrieve
+  /// 
+  /// Returns a boolean indicating the verification status, or null if not available
   Future<bool?> getLinkedAuthMethods({
     required String userId,
     required String authMethodType,

@@ -1,5 +1,5 @@
-import 'package:authentifire/set_user_data.dart';
-import 'package:authentifire/sign_up.dart';
+import 'package:authentifire/helper/set_user_data.dart';
+import 'package:authentifire/auth/sign_up.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,10 +11,19 @@ void main() {
       final mockFirebaseAuth = MockFirebaseAuth();
       const email = 'john@example.com';
       const password = '12345678';
+      const username = 'John';
+      const phoneNumber = '+123456789';
+      const authMethodType = 'email';
       final sut = SignUp(firebaseAuth: mockFirebaseAuth);
 
       // Act
-      await sut.signUp(email: email, password: password);
+      await sut.signUp(
+          email: email,
+          password: password,
+          username: username,
+          phoneNumber: phoneNumber,
+          authMethodType: authMethodType,
+          isVerified: false);
 
       // Assert
       expect(
@@ -35,11 +44,13 @@ void main() {
 
       // Act
       await sut.setUserData(
-          userId: userId,
-          email: email,
-          username: username,
-          phoneNumber: phoneNumber,
-          authMethodType: authMethodType);
+        userId: userId,
+        email: email,
+        username: username,
+        phoneNumber: phoneNumber,
+        authMethodType: authMethodType,
+        isVerified: false,
+      );
 
       // Assert
       expect(

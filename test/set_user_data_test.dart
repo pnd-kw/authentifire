@@ -1,4 +1,4 @@
-import 'package:authentifire/set_user_data.dart';
+import 'package:authentifire/helper/set_user_data.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,6 +18,7 @@ void main() {
         userDataSetter: sut,
         userId: 'user123',
         userData: userData,
+        authMethodType: '',
       );
 
       // Assert
@@ -100,7 +101,7 @@ Future<void> setUser({
   required SetUserData userDataSetter,
   required String userId,
   required Map<String, dynamic> userData,
-  String? authMethodType,
+  required String authMethodType,
   bool? isVerified,
 }) async {
   await userDataSetter.setUserData(

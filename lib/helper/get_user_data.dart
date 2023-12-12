@@ -6,6 +6,11 @@ class GetUserData {
   GetUserData(FirebaseFirestore? firebaseFirestore)
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
+  /// Retrieves the user data and linked authentication methods for a specific user
+  /// [userId] is the unique identifier of the user in Firestore
+  /// 
+  /// Returns a Map<String, dynamic>? containing the user data and linked authentication methods or null if the user does not exist
+
   Future<Map<String, dynamic>?> getUserData(String userId) async {
     try {
       // Get user collection data

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'model/user.dart';
+import '../model/user.dart';
 
 /// This class manages Shared Preferences and Firebase Authentication settings
 class SharedPreferencesSetting {

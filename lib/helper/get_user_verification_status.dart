@@ -1,8 +1,8 @@
-import 'package:authentifire/get_linked_auth_method.dart';
+import 'package:authentifire/helper/get_linked_auth_method.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Get user verification status which will then be used in Bloc to set the authenticated or unauthenticated user state
+/// Class responsible for retrieving user verification status
 class GetUserVerificationStatus {
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GetLinkedAuthMethods _getLinkedAuthMethods;
@@ -15,9 +15,9 @@ class GetUserVerificationStatus {
   })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _getLinkedAuthMethods = getLinkedAuthMethods ?? GetLinkedAuthMethods(),
         _prefs = prefs;
-
-  /// Get current auth method via [SharedPreferences]
-  /// Get user verification status via [GetLinkedAuthMethods]
+  /// Retrieves the user verification status based on the current authentication method
+  /// 
+  /// Returns a boolean indicating the verification status, or null if not available
   Future<bool?> getUserVerificationStatus() async {
     try {
       // Get user uid
